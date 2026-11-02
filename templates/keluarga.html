@@ -1,0 +1,21 @@
+{% extends 'base.html' %}{% block content %}
+<main class="container page">
+  <span class="eyebrow green">DATA KELUARGA</span>
+  <h1>Kartu Keluarga {{k.kk}}</h1>
+  <p>Alamat: {{k.alamat}}</p>
+  <div class="cards">
+    {% for a in anggota %}
+    <article class="item">
+      <h2>{{a.nama}}</h2>
+      <p>WA: {{a.wa or 'Tidak tersedia'}}</p>
+      {% if a.wa %}<a
+        href="https://wa.me/{{a.wa|replace('+','')|replace(' ','')|replace('-','')}}"
+        target="_blank"
+        rel="noopener"
+        >Hubungi WhatsApp ↗</a
+      >{% endif %}
+    </article>
+    {% endfor %}
+  </div>
+</main>
+{% endblock %}

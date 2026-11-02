@@ -1,0 +1,20 @@
+{
+  "name": "@sipedes/mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplikasi Mobile SIPEDES (Capacitor) - scaffolding tahap lanjutan",
+  "scripts": {
+    "dev": "echo \"Jalankan dari root: npm run build:web && npx cap sync\" && exit 0",
+    "build": "echo \"Build mobile belum dikonfigurasi. Lihat README mobile.\" && exit 0",
+    "lint": "echo \"No linter\" && exit 0",
+    "test": "echo \"No tests\" && exit 0"
+  },
+  "dependencies": {
+    "@capacitor/core": "^6.1.0",
+    "@capacitor/android": "^6.1.0",
+    "@capacitor/preferences": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.0"
+  }
+}

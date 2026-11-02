@@ -1,0 +1,269 @@
+{% extends 'base.html' %} {% block content %}
+<main class="container page">
+  <span class="eyebrow green">SIPEDES / PORTAL WARGA</span>
+
+  <h1>
+    {{ { 'jasa': 'Jasa & Usaha Warga', 'warga': 'Data Warga', 'keluhan': 'Keluh Kesah', 'bansos':
+    'Informasi Bansos', 'layanan': 'Layanan Surat', 'berita': 'Berita Desa', 'pengumuman':
+    'Pengumuman Desa' }.get(jenis, jenis|title) }}
+  </h1>
+
+  {% if jenis in ['layanan', 'keluhan', 'bansos', 'warga'] and not me %}
+
+  <section class="panel">
+    <h2>Silakan Login Terlebih Dahulu</h2>
+    <p>Silakan login untuk mengakses layanan dan informasi warga.</p>
+    <a class="pill" href="{{ url_for('login') }}">Login →</a>
+  </section>
+
+  {% else %} {# ==================== LAYANAN SURAT ==================== #} {% if jenis == 'layanan'
+  %} {% if role != 'admin' %}
+  <section class="panel">
+    <h2>Ajukan Surat Baru</h2>
+    <p>Pilih jenis surat yang dibutuhkan, kemudian tuliskan keperluan pengajuan surat.</p>
+
+    <form action="{{ url_for('ajukan', jenis='surat') }}" method="post">
+      <label for="kategori_surat">Kategori Surat</label>
+      <select id="kategori_surat" onchange="filterKategori(this.value)">
+        <option value="">Semua Kategori</option>
+        {% for kategori in katalog.keys() %}
+        <option value="{{ loop.index0 }}">{{ kategori }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="jenis_surat">Jenis Surat</label>
+      <select id="jenis_surat" name="jenis" required>
+        <option value="">-- Pilih Jenis Surat --</option>
+
+        {% for kategori, daftar in katalog.items() %}
+        <optgroup label="{{ kategori }}">
+          {% for surat in daftar %}
+          <option value="{{ surat }}">{{ surat }}</option>
+          {% endfor %}
+        </optgroup>
+        {% endfor %}
+      </select>
+
+      <label for="keperluan">Keperluan Surat</label>
+      <textarea
+        id="keperluan"
+        name="keperluan"
+        maxlength="2000"
+        required
+        placeholder="Tuliskan keperluan pembuatan surat..."
+      ></textarea>
+
+      <button type="submit">Kirim Permohonan →</button>
+    </form>
+
+    <p>
+      <small>
+        Pengajuan akan diperiksa petugas desa. Surat resmi tetap memerlukan verifikasi dan
+        pengesahan pejabat berwenang.
+      </small>
+    </p>
+  </section>
+
+  <script>
+    function filterKategori(kategori) {
+      const select = document.getElementById('jenis_surat');
+      const groups = select.querySelectorAll('optgroup');
+
+      groups.forEach(function (group, index) {
+        group.hidden = kategori !== '' && String(index) !== kategori;
+      });
+
+      select.value = '';
+    }
+  </script>
+  {% endif %}
+
+  <section class="panel">
+    <h2>Katalog Pelayanan Surat</h2>
+    <p>Berikut daftar surat yang tersedia beserta contoh format PDF untuk referensi warga.</p>
+
+    {% set pdf = namespace(index=0) %} {% for kategori, daftar in katalog.items() %}
+    <section class="service-category">
+      <h3>{{ kategori }}</h3>
+
+      <div class="cards">
+        {% for surat in daftar %}
+        <article class="item">
+          <small>LAYANAN ADMINISTRASI</small>
+          <h2>{{ surat }}</h2>
+
+          <p>Lihat contoh format dokumen sebelum mengajukan permohonan kepada petugas desa.</p>
+
+          <a
+            class="pill"
+            href="{{ url_for('contoh_surat', nomor=pdf.index) }}"
+            target="_blank"
+            rel="noopener"
+          >
+            Lihat Contoh PDF ↗
+          </a>
+        </article>
+
+        {% set pdf.index = pdf.index + 1 %} {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </section>
+
+  <section class="panel">
+    <h2>
+      {% if role == 'admin' %} Daftar Permohonan Surat Warga {% else %} Riwayat Permohonan Surat
+      Saya {% endif %}
+    </h2>
+
+    <div class="cards">
+      {% for r in rows %}
+      <article class="item">
+        <small>{{ r.tanggal }}</small>
+        <h2>{{ r.jenis }}</h2>
+
+        {% if role == 'admin' %}
+        <p><b>Nama Pengaju:</b> {{ r.nama }}</p>
+        {% endif %}
+
+        <p><b>Keperluan:</b> {{ r.keperluan }}</p>
+        <p><b>Status:</b> {{ r.status }}</p>
+
+        {% if r.catatan %}
+        <p><b>Catatan Petugas:</b> {{ r.catatan }}</p>
+        {% endif %} {% if role == 'admin' %}
+        <form action="{{ url_for('admin') }}" method="post">
+          <input type="hidden" name="type" value="surat" />
+          <input type="hidden" name="id" value="{{ r.id }}" />
+
+          <label>Status Permohonan</label>
+          <select name="status" required>
+            {% for s in ['Menunggu', 'Diproses', 'Disetujui', 'Ditolak', 'Selesai'] %}
+            <option value="{{ s }}" {% if r.status="" ="s" %}selected{% endif %}>{{ s }}</option>
+            {% endfor %}
+          </select>
+
+          <label>Catatan Petugas</label>
+          <textarea name="catatan" maxlength="2000">{{ r.catatan }}</textarea>
+
+          <button type="submit">Perbarui Status</button>
+        </form>
+        {% endif %}
+      </article>
+      {% else %}
+      <p>Belum ada permohonan surat.</p>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% endif %} {# ==================== FORM KELUHAN ==================== #} {% if jenis == 'keluhan'
+  and role != 'admin' %}
+  <section class="panel">
+    <h2>Sampaikan Aspirasi</h2>
+    <p>Sampaikan saran atau keluhan kepada pemerintah desa.</p>
+
+    <form action="{{ url_for('ajukan', jenis='keluhan') }}" method="post">
+      <label for="isi_keluhan">Pesan untuk Pemerintah Desa</label>
+      <textarea
+        id="isi_keluhan"
+        name="isi"
+        maxlength="2000"
+        required
+        placeholder="Tuliskan keluhan atau saran..."
+      ></textarea>
+
+      <button type="submit">Kirim Aspirasi →</button>
+    </form>
+  </section>
+  {% endif %} {# ==================== PENCARIAN WARGA ==================== #} {% if jenis == 'warga'
+  %}
+  <section class="panel">
+    <h2>Cari Data Warga</h2>
+
+    <form method="get">
+      <label for="q">Nama Warga atau Nomor KK</label>
+      <input
+        id="q"
+        name="q"
+        value="{{ request.args.get('q', '') }}"
+        placeholder="Masukkan nama atau nomor KK"
+        required
+      />
+
+      <button type="submit">Cari Warga →</button>
+    </form>
+  </section>
+  {% endif %} {# ==================== DAFTAR DATA ==================== #} {% if jenis != 'layanan'
+  %}
+  <div class="cards">
+    {% for r in rows %}
+    <article class="item">
+      {% if jenis in ['berita', 'pengumuman'] %}
+      <small>{{ r.tanggal }}</small>
+      <h2>{{ r.judul }}</h2>
+      <p class="pre">{{ r.isi }}</p>
+
+      {% elif jenis == 'jasa' %}
+      <small>{{ r.kategori }}</small>
+      <h2>{{ r.nama }}</h2>
+      <p>{{ r.deskripsi }}</p>
+      <p>⌖ {{ r.alamat }}</p>
+
+      <a
+        class="pill"
+        href="https://wa.me/{{ r.wa|replace('+', '')|replace(' ', '')|replace('-', '') }}?text=Halo%2C%20saya%20melihat%20jasa%20Anda%20di%20SIPEDES"
+        target="_blank"
+        rel="noopener"
+        >Chat WhatsApp ↗</a
+      >
+
+      {% elif jenis == 'warga' %}
+      <h2>{{ r.nama }}</h2>
+      <p>Nomor KK: {{ r.kk or 'Belum terhubung' }}</p>
+
+      {% if r.kk %}
+      <a href="{{ url_for('keluarga', uid=r.id) }}"> Lihat Anggota Keluarga → </a>
+      {% endif %} {% elif jenis == 'bansos' %}
+      <h2>{{ r.program }}</h2>
+      <p>{{ r.keterangan or 'Tidak ada keterangan tambahan.' }}</p>
+
+      {% if role == 'admin' %}
+      <p>Nomor KK: {{ r.kk }}</p>
+      {% endif %} {% elif jenis == 'keluhan' %}
+      <small>{{ r.tanggal }}</small>
+
+      {% if role == 'admin' %}
+      <h2>{{ r.nama }}</h2>
+      {% endif %}
+
+      <p>{{ r.isi }}</p>
+      <p><b>Status:</b> {{ r.status }}</p>
+
+      {% if r.tanggapan %}
+      <p><b>Tanggapan Petugas:</b> {{ r.tanggapan }}</p>
+      {% endif %} {% if role == 'admin' %}
+      <form action="{{ url_for('admin') }}" method="post">
+        <input type="hidden" name="type" value="keluhan" />
+        <input type="hidden" name="id" value="{{ r.id }}" />
+
+        <label>Status Keluhan</label>
+        <select name="status" required>
+          {% for s in ['Diterima', 'Diproses', 'Selesai', 'Ditolak'] %}
+          <option value="{{ s }}" {% if r.status="" ="s" %}selected{% endif %}>{{ s }}</option>
+          {% endfor %}
+        </select>
+
+        <label>Tanggapan Petugas</label>
+        <textarea name="tanggapan" maxlength="2000">{{ r.tanggapan }}</textarea>
+
+        <button type="submit">Perbarui Keluhan</button>
+      </form>
+      {% endif %} {% endif %}
+    </article>
+    {% else %}
+    <p>Belum ada data untuk ditampilkan.</p>
+    {% endfor %}
+  </div>
+  {% endif %} {% endif %}
+</main>
+{% endblock %}

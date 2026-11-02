@@ -1,0 +1,16 @@
+{
+  "name": "@sipedes/shared",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tipe, skema, dan utilitas bersama untuk SIPEDES",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "build": "tsc",
+    "test": "echo \"No tests in shared package\" && exit 0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  }
+}

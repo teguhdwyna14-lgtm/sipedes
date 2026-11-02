@@ -1,0 +1,342 @@
+{% extends 'base.html' %} {% block content %}
+
+<main class="container page">
+  <!-- HEADER DASHBOARD -->
+  <span class="eyebrow green">PANEL PENGELOLA</span>
+
+  <h1>Dashboard Admin Desa</h1>
+
+  <p>Kelola data kependudukan, layanan desa, berita, pengumuman, bantuan sosial, dan jasa warga.</p>
+
+  <p>
+    Buat Kartu Keluarga terlebih dahulu, kemudian masukkan anggota keluarga ke dalam KK tersebut.
+    Password awal warga otomatis menggunakan tanggal lahir dengan format DDMMYYYY.
+  </p>
+
+  <!-- ========================================= -->
+  <!-- FORM PENGELOLAAN DATA -->
+  <!-- ========================================= -->
+
+  <div class="admin-grid">
+    <!-- TAMBAH KARTU KELUARGA -->
+    <section class="panel">
+      <h2>Tambah Kartu Keluarga</h2>
+
+      <form method="POST">
+        <input type="hidden" name="type" value="keluarga" />
+
+        <label>Nomor KK</label>
+
+        <input
+          type="text"
+          name="kk"
+          required
+          minlength="16"
+          maxlength="16"
+          pattern="[0-9]{16}"
+          placeholder="Masukkan 16 digit nomor KK"
+        />
+
+        <label>Alamat</label>
+
+        <textarea name="alamat" required placeholder="Masukkan alamat keluarga"></textarea>
+
+        <button type="submit">Simpan KK</button>
+      </form>
+    </section>
+
+    <!-- TAMBAH AKUN WARGA -->
+    <section class="panel">
+      <h2>Tambah Akun Warga</h2>
+
+      <form method="POST">
+        <input type="hidden" name="type" value="warga" />
+
+        <label>Nama Lengkap</label>
+
+        <input type="text" name="nama" required placeholder="Nama lengkap warga" />
+
+        <label>Username (untuk login)</label>
+
+        <input type="text" name="username" required placeholder="Username harus unik" />
+
+        <label>Tanggal Lahir</label>
+
+        <input type="date" name="lahir" required />
+
+        <label>Nomor WhatsApp</label>
+
+        <input type="tel" name="wa" placeholder="628123456789" pattern="[0-9]+" />
+
+        <label>Masukkan ke Kartu Keluarga</label>
+
+        <select name="keluarga_id" required>
+          <option value="">-- Pilih Kartu Keluarga --</option>
+
+          {% for f in families %}
+
+          <option value="{{ f.id }}">{{ f.kk }} — {{ f.alamat }}</option>
+
+          {% endfor %}
+        </select>
+
+        <button type="submit">Buat Akun Warga</button>
+      </form>
+    </section>
+
+    <!-- TAMBAH BERITA DAN PENGUMUMAN -->
+    <section class="panel">
+      <h2>Tambah Berita / Pengumuman</h2>
+
+      <form method="POST">
+        <input type="hidden" name="type" value="konten" />
+
+        <label>Jenis Informasi</label>
+
+        <select name="jenis" required>
+          <option value="berita">Berita Desa</option>
+
+          <option value="pengumuman">Pengumuman</option>
+        </select>
+
+        <label>Judul</label>
+
+        <input type="text" name="judul" required placeholder="Masukkan judul" />
+
+        <label>Isi Informasi</label>
+
+        <textarea name="isi" required placeholder="Tuliskan informasi di sini"></textarea>
+
+        <button type="submit">Terbitkan</button>
+      </form>
+    </section>
+
+    <!-- TAMBAH JASA WARGA -->
+    <section class="panel">
+      <h2>Tambah Jasa Warga</h2>
+
+      <form method="POST">
+        <input type="hidden" name="type" value="jasa" />
+
+        <label>Nama Usaha</label>
+
+        <input type="text" name="nama" required placeholder="Contoh: Bengkel Pak Budi" />
+
+        <label>Kategori Usaha</label>
+
+        <input type="text" name="kategori" required placeholder="Contoh: Bengkel Motor" />
+
+        <label>Alamat Usaha</label>
+
+        <input type="text" name="alamat" required placeholder="Alamat lengkap usaha" />
+
+        <label>Nomor WhatsApp</label>
+
+        <input type="tel" name="wa" required pattern="[0-9]+" placeholder="628123456789" />
+
+        <label>Deskripsi Usaha</label>
+
+        <textarea name="deskripsi" placeholder="Jelaskan jasa yang ditawarkan"></textarea>
+
+        <button type="submit">Terbitkan Jasa</button>
+      </form>
+    </section>
+
+    <!-- TAMBAH PENERIMA BANSOS -->
+    <section class="panel">
+      <h2>Tambah Penerima Bansos</h2>
+
+      <form method="POST">
+        <input type="hidden" name="type" value="bansos" />
+
+        <label>Kartu Keluarga Penerima</label>
+
+        <select name="keluarga_id" required>
+          <option value="">-- Pilih Kartu Keluarga --</option>
+
+          {% for f in families %}
+
+          <option value="{{ f.id }}">{{ f.kk }}</option>
+
+          {% endfor %}
+        </select>
+
+        <label>Program Bantuan</label>
+
+        <input type="text" name="program" required placeholder="Contoh: Bantuan Pangan" />
+
+        <label>Keterangan</label>
+
+        <textarea name="keterangan" placeholder="Keterangan tambahan"></textarea>
+
+        <button type="submit">Simpan Penerima</button>
+      </form>
+    </section>
+
+    <!-- KELOLA PERMOHONAN -->
+    <section class="panel">
+      <h2>Kelola Permohonan</h2>
+
+      <p>Admin dapat memeriksa pengajuan surat, mengubah status, dan menanggapi keluhan warga.</p>
+
+      <p>
+        <a href="{{ url_for('listing', jenis='layanan') }}"> Kelola Permohonan Surat → </a>
+      </p>
+
+      <p>
+        <a href="{{ url_for('listing', jenis='keluhan') }}"> Tanggapi Keluhan Warga → </a>
+      </p>
+
+      <h3>Daftar Akun</h3>
+
+      {% for u in users %}
+
+      <p>{{ u.nama }} · {{ u.username }}</p>
+
+      {% else %}
+
+      <p>Belum ada akun.</p>
+
+      {% endfor %}
+    </section>
+  </div>
+
+  <!-- ========================================= -->
+  <!-- MANAJEMEN DAN HAPUS DATA -->
+  <!-- ========================================= -->
+
+  <section class="panel">
+    <h2>Manajemen Data Desa</h2>
+
+    <p>Admin dapat menghapus data yang salah. Pastikan data sudah diperiksa sebelum dihapus.</p>
+
+    <!-- HAPUS KARTU KELUARGA -->
+    <h3>Data Kartu Keluarga</h3>
+
+    {% for f in families %}
+
+    <div class="manage-row">
+      <div>
+        <strong>{{ f.kk }}</strong>
+        <p>{{ f.alamat }}</p>
+      </div>
+
+      <form
+        method="POST"
+        action="{{ url_for('hapus', tabel='keluarga', record_id=f.id) }}"
+        onsubmit="return confirm('Yakin ingin menghapus KK ini?');"
+      >
+        <button type="submit" class="danger">Hapus</button>
+      </form>
+    </div>
+
+    {% else %}
+
+    <p>Belum ada data Kartu Keluarga.</p>
+
+    {% endfor %}
+
+    <!-- HAPUS AKUN WARGA -->
+    <h3>Data Akun Warga</h3>
+
+    {% for u in users %} {% if u.role == 'warga' %}
+
+    <div class="manage-row">
+      <div>
+        <strong>{{ u.nama }}</strong>
+        <p>Username: {{ u.username }}</p>
+      </div>
+
+      <form
+        method="POST"
+        action="{{ url_for('hapus', tabel='users', record_id=u.id) }}"
+        onsubmit="return confirm('Yakin ingin menghapus akun warga ini?');"
+      >
+        <button type="submit" class="danger">Hapus</button>
+      </form>
+    </div>
+
+    {% endif %} {% endfor %}
+
+    <!-- HAPUS BERITA DAN PENGUMUMAN -->
+    <h3>Berita dan Pengumuman</h3>
+
+    {% for item in inventory.konten %}
+
+    <div class="manage-row">
+      <div>
+        <strong>{{ item.judul }}</strong>
+        <p>{{ item.jenis | title }}</p>
+      </div>
+
+      <form
+        method="POST"
+        action="{{ url_for('hapus', tabel='konten', record_id=item.id) }}"
+        onsubmit="return confirm('Hapus berita atau pengumuman ini?');"
+      >
+        <button type="submit" class="danger">Hapus</button>
+      </form>
+    </div>
+
+    {% else %}
+
+    <p>Belum ada berita atau pengumuman.</p>
+
+    {% endfor %}
+
+    <!-- HAPUS JASA WARGA -->
+    <h3>Data Jasa Warga</h3>
+
+    {% for item in inventory.jasa %}
+
+    <div class="manage-row">
+      <div>
+        <strong>{{ item.nama }}</strong>
+        <p>{{ item.kategori }} — {{ item.alamat }}</p>
+      </div>
+
+      <form
+        method="POST"
+        action="{{ url_for('hapus', tabel='jasa', record_id=item.id) }}"
+        onsubmit="return confirm('Yakin ingin menghapus jasa ini?');"
+      >
+        <button type="submit" class="danger">Hapus</button>
+      </form>
+    </div>
+
+    {% else %}
+
+    <p>Belum ada data jasa warga.</p>
+
+    {% endfor %}
+
+    <!-- HAPUS DATA BANSOS -->
+    <h3>Data Penerima Bansos</h3>
+
+    {% for item in inventory.bansos %}
+
+    <div class="manage-row">
+      <div>
+        <strong>{{ item.program }}</strong>
+        <p>ID Keluarga: {{ item.keluarga_id }}</p>
+        <p>{{ item.keterangan }}</p>
+      </div>
+
+      <form
+        method="POST"
+        action="{{ url_for('hapus', tabel='bansos', record_id=item.id) }}"
+        onsubmit="return confirm('Yakin ingin menghapus data bansos ini?');"
+      >
+        <button type="submit" class="danger">Hapus</button>
+      </form>
+    </div>
+
+    {% else %}
+
+    <p>Belum ada data penerima bansos.</p>
+
+    {% endfor %}
+  </section>
+</main>
+
+{% endblock %}

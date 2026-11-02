@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% block content %}
+<main class="container page">
+  <span class="eyebrow green">LOKASI DESA</span>
+  <h1>Peta Desa</h1>
+  <div class="panel">
+    <p>
+      Lokasi contoh diarahkan ke Desa Bakung Kidul, Jamblang, Cirebon. Admin dapat mengubah tautan
+      melalui variabel DESA_MAP_URL. Ini bukan peta batas wilayah resmi.
+    </p>
+    <a class="pill" href="{{map_url}}" target="_blank" rel="noopener">Buka Google Maps ↗</a>
+    <a class="pill secondary" href="/peta/download">Unduh tautan peta (.CSV) ↓</a>
+  </div>
+</main>
+{% endblock %}

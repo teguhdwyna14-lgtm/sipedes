@@ -1,0 +1,16 @@
+{
+  "name": "@sipedes/desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplikasi Desktop SIPEDES (Electron) - scaffolding tahap lanjutan",
+  "main": "main.js",
+  "scripts": {
+    "dev": "echo \"Jalankan dari root: npm run build:web lalu npm run dev:desktop\" && electron .",
+    "build": "echo \"Build desktop belum dikonfigurasi sepenuhnya. Lihat README desktop.\" && exit 0",
+    "lint": "echo \"No linter\" && exit 0",
+    "test": "echo \"No tests\" && exit 0"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}

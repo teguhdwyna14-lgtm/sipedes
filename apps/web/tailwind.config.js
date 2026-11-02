@@ -1,0 +1,77 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        // Palet tradisional Indonesia modern
+        forest: {
+          50: '#f0f7f0',
+          100: '#dcecdf',
+          200: '#bbd9c1',
+          300: '#8fc09a',
+          400: '#5fa070',
+          500: '#3d8252',
+          600: '#2d6840',
+          700: '#245334',
+          800: '#1f432b',
+          900: '#1a3825',
+          950: '#0d2014',
+        },
+        cream: {
+          50: '#fdfbf6',
+          100: '#faf5ea',
+          200: '#f4e9d0',
+          300: '#ecd7a8',
+          400: '#e0bf7a',
+          500: '#d4a852',
+          600: '#c09139',
+          700: '#9d702f',
+          800: '#7f5a2b',
+          900: '#684a27',
+          950: '#3a2713',
+        },
+        wood: {
+          50: '#faf6f2',
+          100: '#f3e9df',
+          200: '#e6d0bd',
+          300: '#d6b094',
+          400: '#c48d68',
+          500: '#b6744f',
+          600: '#a55f42',
+          700: '#8b4b39',
+          800: '#713e33',
+          900: '#5e342d',
+          950: '#331b18',
+        },
+        gold: {
+          50: '#fdfbeb',
+          100: '#faf5c7',
+          200: '#f2e98c',
+          300: '#ead455',
+          400: '#e3bb2c',
+          500: '#c99c1f',
+          600: '#a47917',
+          700: '#845917',
+          800: '#6e4819',
+          900: '#5e3d19',
+          950: '#36200c',
+        },
+      },
+      fontFamily: {
+        sans: ['Plus Jakarta Sans', 'Inter', 'system-ui', 'sans-serif'],
+        serif: ['Plus Jakarta Sans', 'serif'],
+        display: ['Plus Jakarta Sans', 'serif'],
+      },
+      backgroundImage: {
+        'batik-pattern': "url(\"data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L24 12L36 8L28 18L40 20L28 22L36 32L24 28L20 40L16 28L4 32L12 22L0 20L12 18L4 8L16 12Z' fill='%23245334' fill-opacity='0.04'/%3E%3C/svg%3E\")",
+        'songket-pattern': "url(\"data:image/svg+xml,%3Csvg width='60' height='20' viewBox='0 0 60 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10L10 0L20 10L10 20Z M30 10L40 0L50 10L40 20Z' stroke='%23c99c1f' stroke-opacity='0.1' fill='none'/%3E%3C/svg%3E\")",
+      },
+      boxShadow: {
+        'card': '0 2px 8px rgba(36, 83, 52, 0.08)',
+        'card-hover': '0 8px 24px rgba(36, 83, 52, 0.15)',
+      },
+    },
+  },
+  plugins: [],
+};

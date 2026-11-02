@@ -1,0 +1,23 @@
+{% extends 'base.html' %}{% block content %}
+<main class="narrow panel">
+  <span class="eyebrow green">AKSES WARGA</span>
+  <h1>Masuk ke portal.</h1>
+  <p>Akun dibuat oleh admin desa. Tidak tersedia pendaftaran mandiri.</p>
+  <form method="post">
+    <label>Nama pengguna</label
+    ><input
+      name="username"
+      required
+      placeholder="Nama pengguna dari admin"
+      autocomplete="username"
+    /><label>Password</label
+    ><input
+      name="password"
+      type="password"
+      required
+      autocomplete="current-password"
+      placeholder="Password dari admin"
+    /><button>Masuk →</button>
+  </form>
+</main>
+{% endblock %}
