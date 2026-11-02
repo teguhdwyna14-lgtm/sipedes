@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SIPEDES - Website Desa (Flask + SQLite)
 
 ## Menjalankan di Windows / VS Code
@@ -19,3 +20,6 @@ Di panel admin: tambah KK dahulu, kemudian buat akun warga. Username warga diten
 - Foto hero dan kartu menggunakan URL Unsplash dan memerlukan internet; ganti dengan foto desa sendiri untuk situs resmi.
 - Nomor WA jasa masukkan format 628xxxxxxxxx. Jangan unggah data pribadi warga tanpa dasar hukum dan persetujuan/otorisasi yang sesuai.
 - SQLite dipakai langsung, jadi tidak perlu XAMPP/MySQL.
+=======
+# sipedes
+>>>>>>> b7fc848645aba531c22607aeda8399054e45048b
